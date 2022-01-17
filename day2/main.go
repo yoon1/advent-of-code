@@ -2,10 +2,11 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"errors"
 	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -14,60 +15,8 @@ const (
 	ErrInvalidData = "Error invalid data!!"
 )
 
-const (
-	none = 0
-)
 
-func countLargerThanPrev(nums []int) int {
-	largerCount := 0
-	pre := none
-	for _, num := range nums {
-		if pre == none {
-			pre = num
-			continue
-		}
-		cur := num
-
-		if cur > pre {
-			largerCount++
-		}
-
-		pre = cur
-	}
-
-	return largerCount
-}
-
-func sumOfList(nums []int) int {
-	result := 0
-	for _, val := range nums {
-		result += val
-	}
-	return result
-}
-
-func convertListSumOfSlidingWindow(nums []int) []int {
-	const slidingWindowSize = 3
-	size := len(nums) - slidingWindowSize
-
-	var list []int
-	for i := 0; i <= size; i++ {
-		var slidingWindow []int
-		for slidingIdx := 0; slidingIdx < slidingWindowSize; slidingIdx++ {
-			slidingWindow = append(slidingWindow, nums[i+slidingIdx])
-		}
-		list = append(list, sumOfList(slidingWindow))
-	}
-
-	return list
-}
-
-func solution(nums []int) int {
-	listSumOfSlidingWindow := convertListSumOfSlidingWindow(nums)
-	return countLargerThanPrev(listSumOfSlidingWindow)
-}
-
-func readNumsInFile(fileName string) ([]int, error) {
+func readFile(fileName string) ([]string, error) {
 	//open file
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -78,29 +27,61 @@ func readNumsInFile(fileName string) ([]int, error) {
 	fileScanner := bufio.NewScanner(file)
 
 	// read line by line
-	var nums []int
+	var lines []string
 	for fileScanner.Scan() {
-		num, err := strconv.Atoi(fileScanner.Text())
-		nums = append(nums, num)
-		if err != nil {
-			return nil, err
-		}
+		line := fileScanner.Text()
+		lines = append(lines, line)
 	}
 	if err := fileScanner.Err(); err != nil {
-		log.Fatalf("%s, %s", ErrReadFile, err)
+		return nil, errors.New(ErrReadFile)
 	}
 
-	return nums, nil
+	return lines, nil
+}
+
+func dive(commands []string) (int, error) {
+	const (
+		direction = 0
+		distance = 1
+	)
+	depth := 0
+	horize := 0
+
+	for _, command := range commands {
+		dirInfo := strings.Split(command, " ")
+		var err error
+		var dist int
+		dir := dirInfo[direction]
+		if dist, err = strconv.Atoi(dirInfo[distance]); err != nil {
+			return 0, err
+		}
+		switch(dir) {
+		case "forward":
+			horize += dist
+		case "up":
+			depth -= dist
+		case "down":
+			depth += dist
+		default:
+			return 0, err
+		}
+	}
+
+	return depth * horize, nil
 }
 
 func main() {
 	const fileName = "input"
 
-	measurements, err := readNumsInFile(fileName)
+	mesurements, err := readFile(fileName)
 	if err != nil {
 		log.Fatalf("%s, %s", ErrInvalidData, err)
 	}
 
-	// result
-	fmt.Println(solution(measurements))
+	result, err := dive(mesurements)
+	if err != nil {
+		log.Fatalf("%s", err)
+	}
+
+	log.Print(result)
 }
