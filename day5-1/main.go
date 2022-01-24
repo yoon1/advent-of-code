@@ -66,38 +66,28 @@ func draw(lines []*Line) [][]int {
 		board[i] = make([]int, BOARD_MAX+1)
 	}
 	for _, line := range lines {
-		//fmt.Printf("<%d, %d> => <%d, %d>", line.left.x, line.left.y, line.right.x, line.right.y)
 		if line.left.x == line.right.x {
 			if line.left.y < line.right.y {
-				//fmt.Println(":2")
 				for i := line.left.y; i <= line.right.y; i++ {
-					//fmt.Println("[%d, %d]", line.left.x, i)
 					board[line.left.x][i]++
 				}
 			} else {
-				//fmt.Println(":3")
 				for i := line.right.y; i <= line.left.y; i++ {
-					//fmt.Println("[%d, %d]", line.left.x, i)
 					board[line.left.x][i]++
 				}
 			}
 		}
 		if line.left.y == line.right.y {
 			if line.left.x < line.right.x {
-				//fmt.Println(":5")
 				for i := line.left.x; i <= line.right.x; i++ {
-					//fmt.Println("[%d, %d]", i, line.left.y)
 					board[i][line.left.y]++
 				}
 			} else {
-				//fmt.Println(":6")
 				for i := line.right.x; i <= line.left.x; i++ {
-					//fmt.Println("[%d, %d]", i, line.left.y)
 					board[i][line.left.y]++
 				}
 			}
 		}
-		//fmt.Println()
 	}
 
 	return board

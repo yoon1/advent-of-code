@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"math"
@@ -51,7 +50,6 @@ func readNumsInFile(fileName string) ([][]int, error) {
 }
 
 func find(rates [][]int, target, base int) [][]int {
-	//log.Printf("================FIND==================")
 	rowSize := len(rates)
 	if rowSize == 1 {
 		return rates
@@ -61,7 +59,6 @@ func find(rates [][]int, target, base int) [][]int {
 
 	for row := 0; row < rowSize; row++ {
 		x := rates[row][target]
-		//log.Printf("INSERT [%d], %v", x, rates[row])
 		collection[x] = append(collection[x], rates[row])
 	}
 
@@ -97,15 +94,6 @@ func lifeRate(rates [][]int, base int) (result []int) {
 	return rates[0]
 }
 
-func reverseBits(bits []int) (result []int) {
-	result = make([]int, len(bits))
-	for idx, bit := range bits {
-		result[idx] = 1 - bit
-	}
-
-	return result
-}
-
 func binaryToDecimal(binary []int) int {
 	len := len(binary)
 	decimal := 0
@@ -116,23 +104,6 @@ func binaryToDecimal(binary []int) int {
 	return decimal
 }
 
-func printArray(arr [][]int, title string) {
-	rowSize := len(arr)
-	if rowSize <= 1 {
-		return
-	}
-	colSize := len(arr[0])
-	//log.Print("SIZE", rowSize, colSize)
-	//fmt.Println("==== Print STAR :: " + title + "====")
-	for row := 0; row < rowSize; row++ {
-		for col := 0; col < colSize; col++ {
-			//fmt.Print(arr[row][col], ",")
-		}
-		fmt.Println()
-	}
-	//fmt.Println("==== Print END ====")
-}
-
 func main() {
 	const fileName = "input"
 
@@ -141,10 +112,7 @@ func main() {
 		log.Fatalf("%s, %s", ErrInvalidData, err)
 	}
 
-	//log.Println("LENGTH::", len(gammaRates))
 	oxygen := lifeRate(gammaRates, 1)
 	co2 := lifeRate(gammaRates, 0)
-	//log.Println("OXYGEN", oxygen)
-	//log.Println("CO2", co2)
 	log.Printf("%d", binaryToDecimal(oxygen)*binaryToDecimal(co2))
 }
