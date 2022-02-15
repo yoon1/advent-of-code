@@ -37,6 +37,7 @@ func readNumsInFile(fileName string) ([][]int, error) {
 		}
 
 		bufData := buf[:n]
+		log.Println(bufData)
 		if data, err := strconv.Atoi(string(bufData)); err == nil {
 			line = append(line, data)
 		} else if bytes.Compare(bufData, []byte{13}) == 0 {
@@ -105,9 +106,10 @@ func binaryToDecimal(binary []int) int {
 }
 
 func main() {
+	const path = "../day11-1/"
 	const fileName = "input"
 
-	gammaRates, err := readNumsInFile(fileName)
+	gammaRates, err := readNumsInFile(path + fileName)
 	if err != nil {
 		log.Fatalf("%s, %s", ErrInvalidData, err)
 	}
