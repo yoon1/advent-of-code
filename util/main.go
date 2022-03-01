@@ -1,10 +1,12 @@
 package util
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strconv"
 )
@@ -14,6 +16,30 @@ const (
 	ErrReadFile    = "Error file read!!"
 	ErrInvalidData = "Error invalid data!!"
 )
+
+func ReadLinesInFile(fileName string) ([]string, error) {
+	//open file
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("%s: %s", ErrOpenFile, err)
+	}
+	defer file.Close()
+
+	fileScanner := bufio.NewScanner(file)
+
+	// read line by line
+	var lines []string
+	for fileScanner.Scan() {
+		line := fileScanner.Text()
+		lines = append(lines, line)
+	}
+
+	if err := fileScanner.Err(); err != nil {
+		log.Fatalf("%s, %s", ErrReadFile, err)
+	}
+
+	return lines, nil
+}
 
 func ReadNumsInFile(fileName string) ([][]int, error) {
 	file, err := os.Open(fileName)
@@ -49,10 +75,36 @@ func ReadNumsInFile(fileName string) ([][]int, error) {
 	return nums, nil
 }
 
+func StringToInt(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		fmt.Errorf("[ERROR] %s", err)
+	}
+
+	return i
+}
+
+func GreaterInt(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
+}
+
 func PrintMatrix(nums [][]int, rowLen, colLen int) {
 	for i := 0; i < rowLen; i++ {
 		for j := 0; j < colLen; j++ {
 			fmt.Printf("%5d ", nums[i][j])
+		}
+		fmt.Println()
+	}
+}
+
+func PrintStringMatrix(array [][]string, rowLen, colLen int) {
+	for i := 0; i < rowLen; i++ {
+		for j := 0; j < colLen; j++ {
+			fmt.Printf("%s ", array[i][j])
 		}
 		fmt.Println()
 	}
