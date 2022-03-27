@@ -8,6 +8,8 @@ import (
 	"io"
 	"log"
 	"os"
+	"runtime"
+	"sort"
 	"strconv"
 )
 
@@ -64,8 +66,20 @@ func ReadNumsInFile(fileName string) ([][]int, error) {
 		bufData := buf[:n]
 		if data, err := strconv.Atoi(string(bufData)); err == nil {
 			line = append(line, data)
-		} else if bytes.Compare(bufData, []byte{13}) == 0 ||
-			bytes.Compare(bufData, []byte{10}) == 0 {
+		} else {
+			os := runtime.GOOS
+			switch os {
+			case "linux":
+				if !(bytes.Compare(bufData, []byte{13}) == 0 ||
+					bytes.Compare(bufData, []byte{10}) == 0) {
+					continue
+				}
+
+			case "windows":
+				if !(bytes.Compare(bufData, []byte{13}) == 0) {
+					continue
+				}
+			}
 			nums = append(nums, line)
 			line = []int{}
 		}
@@ -108,4 +122,17 @@ func PrintStringMatrix(array [][]string, rowLen, colLen int) {
 		}
 		fmt.Println()
 	}
+}
+
+func PrintIntMap(m map[string]int) {
+	log.Println("======= printm START ========")
+	sortKeys := make([]string, 0, len(m))
+	for k, _ := range m {
+		sortKeys = append(sortKeys, k)
+	}
+	sort.Strings(sortKeys)
+	for _, k := range sortKeys {
+		fmt.Println(k, m[k])
+	}
+	log.Println("======= printm END ========")
 }
