@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"os"
 	"runtime"
 	"sort"
@@ -135,4 +136,12 @@ func PrintIntMap(m map[string]int) {
 		fmt.Println(k, m[k])
 	}
 	log.Println("======= printm END ========")
+}
+
+func MaxInt(a, b int) int {
+	return int(math.Max(float64(a), float64(b)))
+}
+
+func MinInt(a, b int) int {
+	return int(math.Min(float64(a), float64(b)))
 }
