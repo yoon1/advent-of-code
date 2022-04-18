@@ -44,6 +44,54 @@ func ReadLinesInFile(fileName string) ([]string, error) {
 	return lines, nil
 }
 
+func ReadCharsInFile(fileName string) ([][]string, error) {
+	//open file
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("%s: %s", ErrOpenFile, err)
+	}
+	defer file.Close()
+
+	buf := make([]byte, 1)
+
+	var chars [][]string
+	var line []string
+	for {
+		n, err := file.Read(buf)
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, errors.New(ErrReadFile)
+		}
+
+		bufData := buf[:n]
+		data := string(bufData)
+		if data == "#" || data == "." {
+			line = append(line, data)
+		} else {
+			os := runtime.GOOS
+			switch os {
+			case "linux":
+				if !(bytes.Compare(bufData, []byte{13}) == 0 ||
+					bytes.Compare(bufData, []byte{10}) == 0) {
+					continue
+				}
+
+			case "windows":
+				if !(bytes.Compare(bufData, []byte{13}) == 0) {
+					continue
+				}
+			}
+			chars = append(chars, line)
+			line = []string{}
+		}
+	}
+	chars = append(chars, line)
+
+	return chars, nil
+}
+
 func ReadNumsInFile(fileName string) ([][]int, error) {
 	file, err := os.Open(fileName)
 	if err != nil {
