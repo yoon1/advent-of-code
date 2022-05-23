@@ -9,6 +9,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"reflect"
 	"runtime"
 	"sort"
 	"strconv"
@@ -44,7 +45,7 @@ func ReadLinesInFile(fileName string) ([]string, error) {
 	return lines, nil
 }
 
-func ReadCharsInFile(fileName string) ([][]string, error) {
+func ReadCharsInFile(fileName string, opts []string) ([][]string, error) {
 	//open file
 	file, err := os.Open(fileName)
 	if err != nil {
@@ -67,7 +68,7 @@ func ReadCharsInFile(fileName string) ([][]string, error) {
 
 		bufData := buf[:n]
 		data := string(bufData)
-		if data == "#" || data == "." {
+		if Exists(opts, data) {
 			line = append(line, data)
 		} else {
 			os := runtime.GOOS
@@ -192,4 +193,20 @@ func MaxInt(a, b int) int {
 
 func MinInt(a, b int) int {
 	return int(math.Min(float64(a), float64(b)))
+}
+
+func Exists(arrayType interface{}, item interface{}) bool {
+	arr := reflect.ValueOf(arrayType)
+
+	if !(arr.Kind() == reflect.Array || arr.Kind() == reflect.Slice) {
+		return false
+	}
+
+	for i := 0; i < arr.Len(); i++ {
+		if arr.Index(i).Interface() == item {
+			return true
+		}
+	}
+
+	return false
 }
