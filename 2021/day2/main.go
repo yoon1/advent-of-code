@@ -15,7 +15,6 @@ const (
 	ErrInvalidData = "Error invalid data!!"
 )
 
-
 func readFile(fileName string) ([]string, error) {
 	//open file
 	file, err := os.Open(fileName)
@@ -42,7 +41,7 @@ func readFile(fileName string) ([]string, error) {
 func dive(commands []string) (int, error) {
 	const (
 		direction = 0
-		distance = 1
+		distance  = 1
 	)
 	depth := 0
 	horize := 0
@@ -55,7 +54,7 @@ func dive(commands []string) (int, error) {
 		if dist, err = strconv.Atoi(dirInfo[distance]); err != nil {
 			return 0, err
 		}
-		switch(dir) {
+		switch dir {
 		case "forward":
 			horize += dist
 		case "up":

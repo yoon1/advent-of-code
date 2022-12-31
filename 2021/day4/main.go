@@ -25,15 +25,15 @@ type point struct {
 }
 
 type Square struct {
-	num int
+	num     int
 	checked bool
 }
 type Board struct {
 	square [][]*Square
 }
 type Game struct {
-	order []int
-	boards  []*Board
+	order  []int
+	boards []*Board
 }
 
 func (b *Board) setSquare(nums [][]int) {
@@ -42,7 +42,7 @@ func (b *Board) setSquare(nums [][]int) {
 		var rowSquare []*Square
 		for col := range nums[row] {
 			s := &Square{
-				num: nums[row][col],
+				num:     nums[row][col],
 				checked: false,
 			}
 			rowSquare = append(rowSquare, s)
@@ -56,7 +56,7 @@ func convertStringToTwoBytesArray(str string) (result []string) {
 	strLength := len(str)
 	t := ""
 	tCount := 0
-	for idx := 0 ; idx < strLength; idx++  {
+	for idx := 0; idx < strLength; idx++ {
 		ch := str[idx]
 		t = t + string(ch)
 		tCount++
@@ -118,7 +118,7 @@ func readGameInFile(fileName string) (*Game, error) {
 				return nil, errors.New(ErrInvalidData)
 			}
 			lines = append(lines, line)
-		} else if (len(lines) > 0){
+		} else if len(lines) > 0 {
 			board.setSquare(lines)
 			game.boards = append(game.boards, board)
 			board = &Board{}
@@ -129,7 +129,7 @@ func readGameInFile(fileName string) (*Game, error) {
 		return nil, errors.New(ErrReadFile)
 	}
 
-	if (len(lines) > 0){
+	if len(lines) > 0 {
 		board.setSquare(lines)
 		game.boards = append(game.boards, board)
 		board = &Board{}
@@ -175,7 +175,7 @@ func (game *Game) mark(board *Board, num int) point {
 		}
 	}
 
-	return point {-1, -1}
+	return point{-1, -1}
 }
 
 func (game *Game) calc(board *Board) int {
@@ -193,7 +193,7 @@ func (game *Game) calc(board *Board) int {
 
 func (game *Game) turn(num int) int {
 	score := 0
-	none := point {-1, -1}
+	none := point{-1, -1}
 	for _, board := range game.boards {
 		markPoint := game.mark(board, num)
 		if markPoint != none {
@@ -209,7 +209,7 @@ func (game *Game) turn(num int) int {
 	return score
 }
 
-func (game *Game) play() int{
+func (game *Game) play() int {
 	score := 0
 	for _, turnNumber := range game.order {
 		score = game.turn(turnNumber)
@@ -220,7 +220,7 @@ func (game *Game) play() int{
 	return 0
 }
 
-func main()  {
+func main() {
 	const (
 		fileName = "input"
 	)

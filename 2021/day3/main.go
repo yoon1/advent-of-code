@@ -40,9 +40,9 @@ func readNumsInFile(fileName string) ([][]int, error) {
 		bufData := buf[:n]
 		if data, err := strconv.Atoi(string(bufData)); err == nil {
 			line = append(line, data)
- 		} else if(bytes.Compare(bufData, []byte{13}) == 0) {
-			 nums = append(nums, line)
-			 line = []int{}
+		} else if bytes.Compare(bufData, []byte{13}) == 0 {
+			nums = append(nums, line)
+			line = []int{}
 		}
 	}
 
@@ -71,7 +71,7 @@ func epsilonRate(gammaRates [][]int) (result []int) {
 		}(col)
 	}
 
-	middle := rowSize/2
+	middle := rowSize / 2
 	for idx, rate := range rateArr {
 		if rate <= middle {
 			result[idx] = 1
@@ -81,7 +81,7 @@ func epsilonRate(gammaRates [][]int) (result []int) {
 	return result
 }
 
-func reverseBits(bits []int) (result []int)  {
+func reverseBits(bits []int) (result []int) {
 	result = make([]int, len(bits))
 	for idx, bit := range bits {
 		result[idx] = 1 - bit
@@ -94,7 +94,7 @@ func binaryToDecimal(binary []int) int {
 	len := len(binary)
 	decimal := 0
 	for idx, b := range binary {
-		decimal += b * int(math.Pow(float64(2), float64(len - idx - 1)))
+		decimal += b * int(math.Pow(float64(2), float64(len-idx-1)))
 	}
 
 	return decimal
@@ -111,5 +111,5 @@ func main() {
 	epsilon := epsilonRate(gammaRates)
 	gamma := reverseBits(epsilon)
 
-	log.Printf("%d", binaryToDecimal(epsilon) * binaryToDecimal(gamma))
+	log.Printf("%d", binaryToDecimal(epsilon)*binaryToDecimal(gamma))
 }
