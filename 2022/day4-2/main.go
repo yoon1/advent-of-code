@@ -28,8 +28,7 @@ func extract(str string) (Line, Line) {
 
 func include(str string) bool {
 	a, b := extract(str)
-	if overlapAB(a, b) || overlapAB(b, a) {
-		//log.Println(str)
+	if containsAB(a, b) || containsAB(b, a) {
 		return true
 	}
 	return false
@@ -40,13 +39,9 @@ type Line struct {
 	Right int
 }
 
-func overlapAB(a, b Line) bool {
-	if a.Left <= b.Left && a.Right >= b.Left {
+func containsAB(a, b Line) bool {
+	if a.Left <= b.Left && a.Right >= b.Right {
 		return true
 	}
-	if a.Left <= b.Right && a.Right >= b.Right {
-		return true
-	}
-
 	return false
 }
